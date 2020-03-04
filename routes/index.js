@@ -36,7 +36,9 @@ module.exports = () => {
     router.get('/productos/:idProducto', productosController.mostrarProducto);
 
     //Actualizar producto por ID
-    router.put('/productos/:idProducto', productosController.actualizarProducto);
+    router.put('/productos/:idProducto', 
+        productosController.subirArchivo,     
+        productosController.actualizarProducto);
 
     //Eliminar producto por ID
     router.delete('/productos/:idProducto', productosController.eliminarProducto);
