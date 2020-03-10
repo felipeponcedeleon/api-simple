@@ -14,6 +14,31 @@ exports.registrarUsuario = async(req, res) => {
     }
 }
 
-exports.autenticarUsuario = () => {
+exports.autenticarUsuario = async(req, res, next) => {
+    const { email, password } = req.body;
+    const usuario = await Usuarios.findOne({ email });
 
+    if(!usuario) {
+        await res.status(401).json({
+            mensaje: 'Usuario no existente.'
+        });
+    }else {
+        if(!bcrypt.compareSync(password, usuario.password)) {
+            await res.status(401).json({ 
+                mensaje: 'Contraseña incorrecta'
+            });
+        } else {
+            const token = jwt.sign({
+                email: usuario.email,
+                nombre: usuario.nombre,
+                id: usuario._id
+            }, 'SUPERSECRETO', {
+                expiresIn: '2h'
+            });
+
+            res.json({token});
+
+
+        }
+    }
 }
